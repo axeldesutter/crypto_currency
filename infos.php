@@ -67,7 +67,7 @@
             <li class="list-group-item">
                 <h6>Auteurs</h6>
                 <div class="dropdown-divider"></div>
-                <em>6TE (maths/sciences) :</em> Axel De Sutter - Julien Thaes - Boris Axensalva
+                <em>6TE (maths/sciences) :</em> Axel De Sutter - Julien Taes - Boris Axensalva
             </li>
         </ul>
 
