@@ -1,0 +1,78 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
+    <script src="/javascript/Chart.js"></script>
+    <script src="/javascript/socket.io.js"></script>
+    <link rel="stylesheet" href="/stylesheets/style.css">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Crypto-currency</title>
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" href="#">
+        <img src="/images/crypto.png" height="50" class="d-inline-block align-top" alt="">
+    </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link" href="/">Acheter <span class="sr-only">(actuellement)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/sell">Vendre</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/pricing">Prix</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/about">Informations</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+<!-- Container -->
+<div class="container">
+    <br/>
+    <% if(locals.flash && locals.flash.error){ %>
+        <div class="alert alert-danger">
+            <%= flash.error %>
+        </div>
+    <% }else{ %>
+        <!-- Info/Attention -->
+        <div class="alert alert-info" role="alert">
+            Vous avez actuellement <b><%= user.bank %>$</b> et <b><%= user.wallet %>€</b> sur votre compte. <br/> Un € vaut actuellement <%= value %>$
+        </div>
+    <% } %>
+        <!-- Card/Main body block -->
+        <div class="card">
+            <div class="card-body">
+                <h6 class="card-subtitle mb-2 text-muted text-uppercase">Combien de $ voulez-vous acheter ?</h6>
+                <form method="post" style="margin-bottom: -5px">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">$</span>
+                        </div>
+                        <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" name="amount" readonly="readonly" value="100">
+                        <div class="input-group-append">
+                            <span class="input-group-text">.00</span>
+                        </div>
+                    </div>
+                    <small class="form-text text-muted" style="margin-top: -15px; margin-bottom: 10px">Vous ne pouvez pas acheter pour plus de 100$ à la fois</small>
+                    <button type="submit" class="btn btn-block btn-info" id="buy-btn">Acheter</button>
+                </form>
+            </div>
+        </div>
+
+</div>
+
+<script src="/javascript/jquery-3.2.1.slim.min.js"></script>
+<script src="/javascript/socket.js"></script>
+<script src="/javascript/popper.min.js"></script>
+<script src="/javascript/bootstrap.min.js"></script>
+</body>
+</html>
