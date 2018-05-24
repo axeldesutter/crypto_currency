@@ -10,9 +10,10 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use(session({
   secret: 'key',
-  resave: false,
+  resave: true,
   saveUninitialized: true,
-  cookie: {secure: false}
+  cookie: {secure: false},
+  expires: new Date(Date.now() + (30 * 86400 * 1000)) 
 }))
 app.use(require('./middlewares/flash.js'));
 
@@ -36,16 +37,20 @@ io.on('connection', (socket) => {
 
 app.get('/', (req,res) => {
     let User = require('./models/user')
-    User.init((response) => {
-        if(response !== 'new'){
-            let Wallet = require('./models/wallet');
-            Wallet.getValue((value) => {
-                res.render('pages/index.ejs', {user: response, value: value});
-            })
-        }else{
-            res.render('pages/loading.ejs');
-        }
-    })
+    if(req.session.username){
+        User.init(req.session.username, (response) => {
+            if(response !== 'new'){
+                let Wallet = require('./models/wallet');
+                Wallet.getValue((value) => {
+                    res.render('pages/index.ejs', {user: response, value: value});
+                })
+            }else{
+                res.render('pages/loading.ejs');
+            }
+        })
+    }else{
+        res.redirect('/signup');
+    }
 })
 
 app.get('/loading', (req, res) => {
@@ -54,7 +59,7 @@ app.get('/loading', (req, res) => {
 
 app.get('/sell', (req,res) => {
     let User = require('./models/user')
-    User.init((response) => {
+    User.init(req.session.username, (response) => {
         if(response !== 'new'){
             let Wallet = require('./models/wallet');
             Wallet.getValue((value) => {
@@ -74,11 +79,20 @@ app.get('/about', (req,res) => {
     res.render('pages/about.ejs');
 })
 
+app.get('/signup', (req,res) => {
+    res.render('pages/signup.ejs');
+})
+
+app.get('/disconnect', (req,res) => {
+    req.session.username = false;
+    res.redirect('/');
+})
+
 // Post
 
 app.post('/', (req,res) => {
     let Wallet = require('./models/wallet')
-    Wallet.buy(req.body.amount, (callback) => {
+    Wallet.buy(req.session.username, req.body.amount, (callback) => {
         if(callback != 'Ok'){
             req.flash('error', callback);
             res.redirect('/');
@@ -91,7 +105,7 @@ app.post('/', (req,res) => {
 
 app.post('/sell', (req,res) => {
     let Wallet = require('./models/wallet')
-    Wallet.sell(req.body.amount, (callback) => {
+    Wallet.sell(req.session.username, req.body.amount, (callback) => {
         if(callback != 'Ok'){
             req.flash('error', callback);
             res.redirect('/sell');
@@ -100,4 +114,13 @@ app.post('/sell', (req,res) => {
             res.redirect('/');
         }
     })
+})
+
+app.post('/signup', (req,res) => {
+    if(req.session.username){
+        res.redirect('/');
+    }else{
+        req.session.username = req.body.username;
+        res.redirect('/loading');
+    }
 })

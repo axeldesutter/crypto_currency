@@ -27,11 +27,11 @@ class Wallet{
         })
     }
     
-    static sell(amount,callback){
+    static sell(username,amount,callback){
         if(amount !== undefined || amount !== ''){        
             if(!isNaN(amount)){
                 var userIp = ip.address()
-                connection.query('SELECT * FROM users WHERE ip = ?', [userIp], (err,rows) => {
+                connection.query('SELECT * FROM users WHERE ip = ?', [username], (err,rows) => {
                     if(err) throw err;
         
                     var currentWallet = rows[0].wallet;
@@ -47,7 +47,7 @@ class Wallet{
                             if(parseInt(amount) > 100){
                                 callback('Vous ne pouvez pas vendre plus de 100€ à la fois, désolé.');
                             }else{
-                                connection.query('UPDATE users SET bank = ?,wallet = ? WHERE ip = ?', [newBank, newWallet, userIp], (err, results) => {
+                                connection.query('UPDATE users SET bank = ?,wallet = ? WHERE ip = ?', [newBank, newWallet, username], (err, results) => {
                                     if(err) throw err;
                                     callback('Ok');
                                 })
@@ -61,11 +61,11 @@ class Wallet{
         }
     }
 
-    static buy(amount,callback){
+    static buy(username,amount,callback){
         if(amount !== undefined || amount !== ''){        
             if(!isNaN(amount)){
                 var userIp = ip.address()
-                connection.query('SELECT * FROM users WHERE ip = ?', [userIp], (err,rows) => {
+                connection.query('SELECT * FROM users WHERE ip = ?', [username], (err,rows) => {
                     if(err) throw err;
         
                     var currentWallet = rows[0].wallet;
@@ -81,7 +81,7 @@ class Wallet{
                             if(parseInt(amount) > 100){
                                 callback('Vous ne pouvez pas acheter plus de 100$ à la fois, désolé.');
                             }else{
-                                connection.query('UPDATE users SET bank = ?,wallet = ? WHERE ip = ?', [newBank, newWallet, userIp], (err, results) => {
+                                connection.query('UPDATE users SET bank = ?,wallet = ? WHERE ip = ?', [newBank, newWallet, username], (err, results) => {
                                     if(err) throw err;
                                     callback('Ok');
                                 })
