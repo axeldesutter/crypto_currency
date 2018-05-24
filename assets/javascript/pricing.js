@@ -1,5 +1,7 @@
 // Connect to socket
-var socket =  io.connect('http://localhost:8080');
+const io = require('socket.io-client')
+const socket = io.connect('http://localhost:8080', { reconnect: true });
+//var socket =  io.connect('http://localhost:8080');
 var backgroundColor = ['rgba(54, 162, 235, 0.2)','rgba(54, 162, 235, 0.2)'];
 var borderColor = ['rgba(54, 162, 235, 1)','rgba(54, 162, 235, 1)'];
 var labels = ["",""];
